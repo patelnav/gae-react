@@ -1,0 +1,47 @@
+#!/usr/bin/env python2
+import os
+from os import path
+import sys
+
+import logging
+
+from _manage import ROOT, CallTask, CallTaskRunner, venv
+
+venv()
+
+storage_path = path.join(ROOT, ".storage")
+
+batches = [
+    [CallTask(ROOT, ["./_dependencies"])],
+    [
+        CallTask(
+            ROOT,
+            [
+                "dev_appserver.py",
+                # "--enable_host_checking=false",
+                "--log_level=debug",
+                "--enable_console",
+                "--host=0.0.0.0",
+                "--storage_path=%s" % storage_path,
+                path.join(ROOT, "default", "app.yaml")
+            ]),
+        CallTask(path.join(ROOT, "web"), ["yarn", "start"]),
+        # CallTask(path.join(ROOT, 'web'), ["yarn", "test", "--watchAll"]),
+    ]
+]
+
+try:
+    logging.basicConfig(level=logging.DEBUG)
+
+    if not path.exists(storage_path):
+        os.makedirs(storage_path)
+
+    for tasks in batches:
+        CallTaskRunner.run(tasks)
+
+except KeyboardInterrupt:
+    logging.info('Keyboard Interrupt')
+    try:
+        sys.exit(0)
+    except SystemExit:
+        os._exit(0)

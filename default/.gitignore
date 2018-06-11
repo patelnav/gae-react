@@ -1,0 +1,5 @@
+# lib are modules installed from requirement.txt
+/lib
+
+# build is the production output the react app from ../web
+/build

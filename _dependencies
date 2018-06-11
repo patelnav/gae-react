@@ -1,0 +1,25 @@
+#!/usr/bin/env python2
+
+from os import path
+from _manage import ROOT, CallTask, CallTaskRunner, venv
+
+v = venv()
+
+VENV_PIP2 = path.join(v.path, 'bin', 'pip2')
+
+tasks = [
+    CallTask(path.join(ROOT, "web"), ["yarn"]),
+    CallTask(
+        path.join(ROOT, "default"), [
+            VENV_PIP2,
+            "install",
+            "-t",
+            "lib",
+            "-r",
+            "requirements.txt",
+            "--disable-pip-version-check",
+            "-q",
+        ])
+]
+
+CallTaskRunner.run(tasks)

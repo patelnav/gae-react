@@ -1,0 +1,14 @@
+#! /bin/bash
+
+SCRIPT_DIR=$(cd `dirname -- $0` && pwd)
+cd $SCRIPT_DIR
+
+VENV_PATH=$(./venv -p)
+
+rm -rf \
+    $VENV_PATH \
+    .pytest_cache default/__pycache__ \
+    default/lib \
+    web/node_modules web/build web/coverage \
+
+find . -name \*.pyc -delete
