@@ -10,24 +10,24 @@ fi
 
 # Get absolute path of our script
 # Why "--" after dirname: https://unix.stackexchange.com/questions/341931/dirname-invalid-option-b/341934
-SCRIPT_DIR=$(cd `dirname -- $0` && pwd)
+ROOT_DIR=$(cd `dirname -- $0` && cd .. && pwd)
 
 # Project name is the directory the script is in
-PROJECT_DIR=`basename $SCRIPT_DIR`
+PROJECT_DIR=`basename $ROOT_DIR`
 
 # Virtualenv will live in .env.<project_name>
-VENV_PATH=$SCRIPT_DIR/.env.$PROJECT_DIR
+VENV_PATH=$ROOT_DIR/.env.$PROJECT_DIR
+
+# If virtualenv doesn't exist, create it
+if [ ! -d $VENV_PATH ]
+then
+    virtualenv $VENV_PATH &> /dev/null
+fi
 
 if [ "$1" == "-p" ]
 then
     echo $VENV_PATH
     exit 0
-fi
-
-# If virtualenv doesn't exist, create it
-if [ ! -d $VENV_PATH ]
-then
-    virtualenv --system-site-packages $VENV_PATH &> /dev/null
 fi
 
 source $VENV_PATH/bin/activate

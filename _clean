@@ -1,9 +1,8 @@
 #! /bin/bash
 
-SCRIPT_DIR=$(cd `dirname -- $0` && pwd)
-cd $SCRIPT_DIR
+ROOT_DIR=$(cd `dirname -- $0` && cd .. && pwd)
 
-VENV_PATH=$(./venv -p)
+VENV_PATH=$(util/venv -p)
 
 rm -rf \
     $VENV_PATH \

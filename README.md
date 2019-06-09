@@ -7,13 +7,18 @@ This base configuration includes:
 *   Backend: React app (configured through [create-react-app](https://github.com/facebook/create-react-app)) at [/web](/web)
 
 *   Scripts
-    * [run](/run): Runs **GAE** local server, **React**'s Node server
+    * `yarn start`: Install deps, runs **GAE** local server, **React**'s Node server
+    * `yarn deps`: Makes sure GAE and React dependencies are installed
+    * `yarn clean`: Cleans all temp files created by run, test & venv
+        * Also deletes all .pyc files in project
     * [test](/test): Runs pytest and yarn test
         * Installs pytest+deps and runs [_dependencies](/_dependencies)
     * [venv](/venv): Generates virtualenv for the project
         * **All commands** will cause venv ensure an environment has been created
         * `source venv`: Will load it into your current shell
         * `venv -p`: Will return the path of the virutal environment
-    * [_dependencies](/_dependencies): Makes sure GAE and React dependencies are installed
-    * [_clean](/_clean): Cleans all temp files created by run, test & venv
-        * Also deletes all .pyc files in project
+
+## How to use ##
+
+Create a sub-module in your repository named "util" in the root directly.
+Symlink `/util/*.json` to `/`

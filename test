@@ -1,27 +1,54 @@
 #!/usr/bin/env python2
 
 from os import path
+import shutil
 from _manage import ROOT, CallTask, CallTaskRunner, venv
+import _tasks
+
+from threading import Thread
+
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-s', '--skip-setup', action='store_true')
+args = parser.parse_args()
 
 v = venv()
 VENV_PIP2 = path.join(v.path, 'bin', 'pip2')
 
-batches = [
-    [
-        CallTask(ROOT, ["./_dependencies"]),
-        CallTask(
-            ROOT,
-            [VENV_PIP2, "install", "gcp-devrel-py-tools", "mock", "pytest"]),
-        #  Install /default dependencies into our environment for pytest
-        CallTask(
-            path.join(ROOT, "default"),
-            [VENV_PIP2, "install", "-r", "requirements.txt"])
-    ],
-    [
-        CallTask(ROOT, [path.join(v.path, 'bin', 'pytest')]),
-        CallTask(path.join(ROOT, 'web'), ["CI=true", "yarn", "test"]),
-    ]
-]
+storage_path = path.join(ROOT, ".storage.test")
 
-for tasks in batches:
-    CallTaskRunner.run(tasks)
+if args.skip_setup:
+    print("Skipping dependency install")
+else:
+    CallTaskRunner.run([_tasks.DEPENDENCIES])
+
+step2 = [CallTask(path.join(ROOT), ["yarn"])]
+
+if not args.skip_setup:
+    step2.append(_tasks.WEB_BUILD)
+
+CallTaskRunner.run(step2)
+
+TEST_TASK = CallTask(ROOT, [
+    'npx', 'cypress', 'run', '--config baseUrl=http://localhost:8077',
+    '--env testService=http://localhost:8078'
+])
+
+TEST_SERVER = _tasks.DEV_APPSERVER(storage_path=storage_path, test=True)
+
+server_thread = Thread(target=TEST_SERVER.run)
+server_thread.daemon = True
+
+# START THE SERVER
+server_thread.start()
+
+# START THE TESTS
+try:
+    CallTaskRunner.run([TEST_TASK])
+finally:
+    # KILL THE SERVER
+    TEST_SERVER.kill()
+
+    # CLEAN UP STORAGE
+    shutil.rmtree(storage_path)

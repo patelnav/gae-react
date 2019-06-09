@@ -1,0 +1,38 @@
+#!/usr/bin/env python2
+import sys
+import subprocess
+from os import path
+import re
+from _manage import ROOT, venv, CallTask
+import _tasks
+venv()
+
+GCLOUD_PROJECT_ID = 'field-scope'
+
+p = subprocess.Popen('gcloud info',
+                     cwd=ROOT,
+                     stdout=subprocess.PIPE,
+                     shell=True)
+
+gcloud_info = p.communicate()[0]
+current_id = re.search(r'Project: \[(.*)\]', gcloud_info).group(1)
+if GCLOUD_PROJECT_ID != current_id:
+    sys.exit(
+        "ERROR: Project ID from gcloud info does not match. \n\tgcloud project id: %s\n\tGCLOUD_PROJECT_ID: %s"
+        % (current_id, GCLOUD_PROJECT_ID))
+
+print("Clean everything")
+_tasks.CLEAN.run()
+
+print("Installing Dependencies: ./_dependencies")
+_tasks.DEPENDENCIES.run()
+
+_tasks.WEB_BUILD.run()
+
+CallTask(ROOT, ["yarn test", '--skip-setup']).run()
+
+CallTask(path.join(ROOT, 'default'), ['gcloud', 'app', 'deploy']).run()
+
+# test_result = subprocess.Popen(
+#     './test', cwd=ROOT, stdout=subprocess.PIPE, shell=True)
+# print test_result

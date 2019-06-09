@@ -1,0 +1,42 @@
+#!/usr/bin/env python2
+import os
+from os import path
+
+import logging
+
+from _manage import ROOT, CallTaskRunner, venv
+import _tasks
+
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-s', '--server-only', action='store_true')
+parser.add_argument('-w', '--web-only', action='store_true')
+parser.add_argument('-x', '--skip-deps', action='store_true')
+args = parser.parse_args()
+
+storage_path = path.join(ROOT, ".storage")
+
+if args.server_only and args.web_only:
+    raise Exception("If you want to run both, don't pass either arg")
+
+venv()
+
+batches = []
+if not args.skip_deps:
+    batches.append([_tasks.DEPENDENCIES])
+
+if args.server_only:
+    batches.append([_tasks.DEV_APPSERVER()])
+elif args.web_only:
+    batches.append([_tasks.WEB_START])
+else:
+    batches.append([_tasks.DEV_APPSERVER(), _tasks.WEB_START])
+
+logging.basicConfig(level=logging.DEBUG)
+
+if not path.exists(storage_path):
+    os.makedirs(storage_path)
+
+for tasks in batches:
+    CallTaskRunner.run(tasks)
