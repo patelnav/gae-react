@@ -2,7 +2,7 @@
 
 from os import path
 import shutil
-from _manage import ROOT, CallTask, CallTaskRunner, venv
+from __init__ import ROOT, CallTask, CallTaskRunner, venv
 import _tasks
 
 from threading import Thread
@@ -35,7 +35,7 @@ TEST_TASK = CallTask(ROOT, [
     '--env testService=http://localhost:8078'
 ])
 
-TEST_SERVER = _tasks.DEV_APPSERVER(storage_path=storage_path, test=True)
+TEST_SERVER = _tasks.DEV_APPSERVER(storage_path, test=True)
 
 server_thread = Thread(target=TEST_SERVER.run)
 server_thread.daemon = True

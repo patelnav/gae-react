@@ -3,11 +3,9 @@ import sys
 import subprocess
 from os import path
 import re
-from _manage import ROOT, venv, CallTask
+from __init__ import CONFIG, ROOT, venv, CallTask
 import _tasks
 venv()
-
-GCLOUD_PROJECT_ID = 'field-scope'
 
 p = subprocess.Popen('gcloud info',
                      cwd=ROOT,
@@ -16,10 +14,9 @@ p = subprocess.Popen('gcloud info',
 
 gcloud_info = p.communicate()[0]
 current_id = re.search(r'Project: \[(.*)\]', gcloud_info).group(1)
-if GCLOUD_PROJECT_ID != current_id:
+if CONFIG.PROJECT_ID != current_id:
     sys.exit(
-        "ERROR: Project ID from gcloud info does not match. \n\tgcloud project id: %s\n\tGCLOUD_PROJECT_ID: %s"
-        % (current_id, GCLOUD_PROJECT_ID))
+        "ERROR: Project ID from gcloud info does not match. \n\tgcloud project id: {current_id}\n\tGCLOUD_PROJECT_ID: {CONFIG.PROJECT_ID}")
 
 print("Clean everything")
 _tasks.CLEAN.run()

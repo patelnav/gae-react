@@ -4,9 +4,15 @@
     "cypress": "^3.1.1",
     "eslint-plugin-cypress": "^2.1.2"
   },
+  "gae-react": {
+    "project-id":"<project_id>",
+    "server-folder": "default",
+    "web-folder": "web"
+  },
   "scripts": {
     "clean": "util/_clean",
     "deps": "util/_dependencies",
-    "start": "util/start"
+    "start": "util/start",
+    "test": "util/test"
   }
 }

@@ -4,7 +4,7 @@ from os import path
 
 import logging
 
-from _manage import ROOT, CallTaskRunner, venv
+from __init__ import ROOT, CallTaskRunner, venv
 import _tasks
 
 import argparse
@@ -27,11 +27,11 @@ if not args.skip_deps:
     batches.append([_tasks.DEPENDENCIES])
 
 if args.server_only:
-    batches.append([_tasks.DEV_APPSERVER()])
+    batches.append([_tasks.DEV_APPSERVER(storage_path)])
 elif args.web_only:
     batches.append([_tasks.WEB_START])
 else:
-    batches.append([_tasks.DEV_APPSERVER(), _tasks.WEB_START])
+    batches.append([_tasks.DEV_APPSERVER(storage_path), _tasks.WEB_START])
 
 logging.basicConfig(level=logging.DEBUG)
 

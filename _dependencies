@@ -1,26 +1,26 @@
 #!/usr/bin/env python2
 
 from os import path
-from _manage import UTIL, ROOT, CallTask, CallTaskRunner, venv
+from __init__ import CONFIG, UTIL, ROOT, CallTask, CallTaskRunner, venv
 
 v = venv()
 
 VENV_PIP2 = path.join(v.path, 'bin', 'pip2')
 
 # Check if server folder exists
-if not path.exists(path.join(ROOT, "default")):
+if not path.exists(CONFIG.SERVER_PATH):
     CallTask(ROOT, [
         "svn", "export",
         "https://github.com/GoogleCloudPlatform/python-docs-samples" +
-        "/trunk/appengine/standard/flask/tutorial", "default"
+        "/trunk/appengine/standard/flask/tutorial", CONFIG.SERVER_PATH
     ]).run()
 
-# if not path.exists(path.join(ROOT, "web")):
-#     CallTask(ROOT, ["npx", "create-react-app", "web"]).run()
+if not path.exists(CONFIG.WEB_PATH):
+    CallTask(ROOT, ["npx", "create-react-app", CONFIG.WEB_PATH]).run()
 
 tasks = [
-    # CallTask(path.join(ROOT, "web"), ["yarn"]),
-    CallTask(path.join(ROOT, "default"), [
+    CallTask(CONFIG.WEB_PATH, ["yarn"]),
+    CallTask(CONFIG.SERVER_PATH, [
         VENV_PIP2,
         "install",
         "-t",

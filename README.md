@@ -20,5 +20,11 @@ This base configuration includes:
 
 ## How to use ##
 
-Create a sub-module in your repository named "util" in the root directly.
-Symlink `/util/*.json` to `/`
+* Create a sub-module in your repository named "util" in the root directly: 
+
+> `git submodule add https://github.com/patelnav/gae-react util`
+* Symlink all json files from /util to root:
+
+> `ln -s util/*.json .`
+
+* Modify `package.json` with "gae-react" configurations

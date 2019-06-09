@@ -1,13 +1,28 @@
 #!/usr/bin/env python2
 import os
-from os.path import dirname
+from os import path
 import subprocess
 from threading import Thread
-
+import json
 import logging
 
-UTIL = dirname(os.path.realpath(__file__))
-ROOT = dirname(UTIL)
+UTIL = path.dirname(path.realpath(__file__))
+ROOT = path.dirname(UTIL)
+
+with open('package.json', 'r') as f:
+    package_json = json.load(f)
+
+class Config(object):
+    PROJECT_ID = None
+    SERVER_PATH = None
+    WEB_PATH = None
+
+    def __init__(self, package_json):
+        self.PROJECT_ID = package_json['project-id']
+        self.SERVER_PATH = path.join(ROOT, package_json['server-folder'])
+        self.WEB_PATH =  path.join(ROOT, package_json['web-folder'])
+
+CONFIG = Config(package_json['gae-react'])
 
 
 class CallTask(object):
