@@ -3,9 +3,9 @@ import sys
 import subprocess
 from os import path
 import re
-from __init__ import CONFIG, ROOT, venv, CallTask
+from __init__ import CONFIG, ROOT, VENV, CallTask
 import _tasks
-venv()
+
 
 p = subprocess.Popen('gcloud info',
                      cwd=ROOT,

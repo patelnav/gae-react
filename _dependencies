@@ -1,11 +1,11 @@
 #!/usr/bin/env python2
 
 from os import path
-from __init__ import CONFIG, UTIL, ROOT, CallTask, CallTaskRunner, venv
+from __init__ import CONFIG, UTIL, ROOT, CallTask, CallTaskRunner, VENV
 
-v = venv()
 
-VENV_PIP2 = path.join(v.path, 'bin', 'pip2')
+
+VENV_PIP2 = path.join(VENV.path, 'bin', 'pip2')
 
 # Check if server folder exists
 if not path.exists(CONFIG.SERVER_PATH):

@@ -106,3 +106,5 @@ class venv(object):
                              shell=True)
 
         self.path = p.communicate()[0].strip()
+
+VENV = venv()

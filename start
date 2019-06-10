@@ -4,7 +4,7 @@ from os import path
 
 import logging
 
-from __init__ import ROOT, CallTaskRunner, venv
+from __init__ import ROOT, CallTaskRunner
 import _tasks
 
 import argparse
@@ -19,8 +19,6 @@ storage_path = path.join(ROOT, ".storage")
 
 if args.server_only and args.web_only:
     raise Exception("If you want to run both, don't pass either arg")
-
-venv()
 
 batches = []
 if not args.skip_deps:

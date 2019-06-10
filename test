@@ -2,7 +2,7 @@
 
 from os import path
 import shutil
-from __init__ import ROOT, CallTask, CallTaskRunner, venv
+from __init__ import ROOT, CallTask, CallTaskRunner, VENV
 import _tasks
 
 from threading import Thread
@@ -13,8 +13,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-s', '--skip-setup', action='store_true')
 args = parser.parse_args()
 
-v = venv()
-VENV_PIP2 = path.join(v.path, 'bin', 'pip2')
+
+VENV_PIP2 = path.join(VENV.path, 'bin', 'pip2')
 
 storage_path = path.join(ROOT, ".storage.test")
 

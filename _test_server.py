@@ -3,10 +3,9 @@
 from os import path
 import shutil
 import _tasks
-from __init__ import ROOT, CallTaskRunner, venv
+from __init__ import ROOT, CallTaskRunner, VENV
 
-v = venv()
-VENV_PIP2 = path.join(v.path, 'bin', 'pip2')
+VENV_PIP2 = path.join(VENV.path, 'bin', 'pip2')
 
 storage_path = path.join(ROOT, ".storage.test")
 
