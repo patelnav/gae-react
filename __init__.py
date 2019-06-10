@@ -9,7 +9,7 @@ import logging
 UTIL = path.dirname(path.realpath(__file__))
 ROOT = path.dirname(UTIL)
 
-with open('package.json', 'r') as f:
+with open(path.join(ROOT, 'package.json'), 'r') as f:
     package_json = json.load(f)
 
 class Config(object):
