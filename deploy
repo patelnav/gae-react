@@ -16,7 +16,9 @@ gcloud_info = p.communicate()[0]
 current_id = re.search(r'Project: \[(.*)\]', gcloud_info).group(1)
 if CONFIG.PROJECT_ID != current_id:
     sys.exit(
-        "ERROR: Project ID from gcloud info does not match. \n\tgcloud project id: {current_id}\n\tGCLOUD_PROJECT_ID: {CONFIG.PROJECT_ID}")
+        """ERROR: Project ID from gcloud info does not match. 
+\tgcloud project id: {current_id}
+\tGCLOUD_PROJECT_ID: {PROJECT_ID}""".format(current_id=current_id, PROJECT_ID=CONFIG.PROJECT_ID))
 
 print("Clean everything")
 _tasks.CLEAN.run()
