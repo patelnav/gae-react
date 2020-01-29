@@ -4,7 +4,7 @@ from os import path
 
 import logging
 
-from __init__ import ROOT, CallTaskRunner
+from __init__ import ROOT, CallTaskRunner, CONFIG
 import _tasks
 
 import argparse
@@ -12,10 +12,9 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('-s', '--server-only', action='store_true')
 parser.add_argument('-w', '--web-only', action='store_true')
+parser.add_argument('-e', '--datastore-emulator', action='store_true')
 parser.add_argument('-x', '--skip-deps', action='store_true')
 args = parser.parse_args()
-
-storage_path = path.join(ROOT, ".storage")
 
 if args.server_only and args.web_only:
     raise Exception("If you want to run both, don't pass either arg")
@@ -24,17 +23,19 @@ batches = []
 if not args.skip_deps:
     batches.append([_tasks.DEPENDENCIES])
 
+dev_appserver = _tasks.DEV_APPSERVER(CONFIG.DATASTORE_STORAGE_PATH, datastore_emulator=args.datastore_emulator or None)
+
 if args.server_only:
-    batches.append([_tasks.DEV_APPSERVER(storage_path)])
+    batches.append([dev_appserver])
 elif args.web_only:
     batches.append([_tasks.WEB_START])
 else:
-    batches.append([_tasks.DEV_APPSERVER(storage_path), _tasks.WEB_START])
+    batches.append([dev_appserver, _tasks.WEB_START])
 
 logging.basicConfig(level=logging.DEBUG)
 
-if not path.exists(storage_path):
-    os.makedirs(storage_path)
+if not path.exists(CONFIG.DATASTORE_STORAGE_PATH):
+    os.makedirs(CONFIG.DATASTORE_STORAGE_PATH)
 
 for tasks in batches:
     CallTaskRunner.run(tasks)

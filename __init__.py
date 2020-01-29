@@ -12,15 +12,30 @@ ROOT = path.dirname(UTIL)
 with open(path.join(ROOT, 'package.json'), 'r') as f:
     package_json = json.load(f)
 
+
 class Config(object):
     PROJECT_ID = None
     SERVER_PATH = None
     WEB_PATH = None
+    ADDL_YAMLS = []
+    DATASTORE_STORAGE_PATH = None
+    DATASTORE_EMULATOR = None
 
     def __init__(self, package_json):
         self.PROJECT_ID = package_json['project-id']
         self.SERVER_PATH = path.join(ROOT, package_json['server-folder'])
-        self.WEB_PATH =  path.join(ROOT, package_json['web-folder'])
+        self.WEB_PATH = path.join(ROOT, package_json['web-folder'])
+        self.DATASTORE_STORAGE_PATH = package_json.get('datastore-storage-path',
+                                                       path.join(ROOT, ".storage"))
+        self.DATASTORE_EMULATOR = package_json.get('datastore-emulator', False)
+        
+        ays = []
+        for ay in package_json.get('additional-yamls', []):
+            ays.append(path.join(ROOT, ay))
+        
+        self.ADDL_YAMLS = ays
+
+
 
 CONFIG = Config(package_json['gae-react'])
 
@@ -106,5 +121,6 @@ class venv(object):
                              shell=True)
 
         self.path = p.communicate()[0].strip()
+
 
 VENV = venv()
