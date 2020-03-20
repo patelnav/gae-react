@@ -1,0 +1,3 @@
+#! /bin/bash
+
+npx cypress "$@" --config baseUrl=http://localhost:8077 --env testService=http://localhost:8078

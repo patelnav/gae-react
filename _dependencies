@@ -4,7 +4,6 @@ from os import path
 from __init__ import CONFIG, UTIL, ROOT, CallTask, CallTaskRunner, VENV
 
 
-
 VENV_PIP2 = path.join(VENV.path, 'bin', 'pip2')
 
 # Check if server folder exists
